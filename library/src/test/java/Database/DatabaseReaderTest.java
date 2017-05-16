@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  * Created by dani9590 on 25/04/17.
  */
 public class DatabaseReaderTest {
-    private DatabaseInterface mockInterface;
+    /*private DatabaseInterface mockInterface;
     private List<String> stringList;
     private DatabaseReader databaseReader;
     @Rule public Timeout globalTimeout = Timeout.seconds(10);
@@ -96,5 +96,5 @@ public class DatabaseReaderTest {
         databaseReader.find("2000000");
     }
 
-
+*/
 }

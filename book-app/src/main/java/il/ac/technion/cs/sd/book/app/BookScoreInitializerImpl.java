@@ -3,27 +3,30 @@ import java.io.StringReader;
 import java.util.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-
+import javafx.util.Pair;
 import Database.Reader;
 import com.google.inject.Inject;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
-import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-public class BookScoreInitializerImpl implements BookScoreInitializer{
+public class BookScoreInitializerImpl implements BookScoreInitializer {
     private TreeMap<Pair<String,String>,String> bookMap;
     private TreeMap<Pair<String,String>,String> reviewerMap;
     public static String reviewer_filename = "reviewer_filename";
     public static String book_filename = "book_filename";
     private Reader bookReader;
     private Reader reviewerReader;
-    /*public BookScoreInitializerImpl(Reader userDatabaseLibrary) {
-        reader = userDatabaseLibrary;
-    }*/
     @Inject
+    public BookScoreInitializerImpl(LineStorageFactory lsf) {
+        bookReader = new Reader(lsf, "book_storage");
+        reviewerReader = new Reader(lsf, "reviewer_storage");
+
+    }
+    /*@Inject- Maybe redundant? Inject is used when we don't want to be tied up to a single implementation,
+    * but here we use the provided LineStorage*/
     public BookScoreInitializerImpl() {
         bookReader = new Reader("book_storage");
         reviewerReader = new Reader("reviewer_storage");

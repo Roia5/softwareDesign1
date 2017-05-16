@@ -14,9 +14,10 @@ import java.util.Collection;
 
 public class Reader{
     private LineStorage st = null;
-/*    public Reader(LineStorageFactory st_factory, String filename) {
+    public Reader(LineStorageFactory st_factory, String filename) {
         st = st_factory.open(filename);
     }
+    /*
     public Reader(LineStorage s){
         st = s;
     }*/

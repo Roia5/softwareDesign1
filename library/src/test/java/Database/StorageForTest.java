@@ -1,12 +1,14 @@
 package Database;
 
+import il.ac.technion.cs.sd.book.ext.LineStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by dani9590 on 26/04/17.
  */
-public class StorageForTest implements DatabaseInterface {
+public class StorageForTest implements LineStorage {
     List<String> list = new ArrayList<>();
     @Override
     public void appendLine(String st) {
