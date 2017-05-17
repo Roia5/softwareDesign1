@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 public class BookScoreReaderImpl implements BookScoreReader{
   private Reader bookReader;
   private Reader reviewerReader;
-  private static int stringCompare(String s1, String s2) {
-      return s1.split("-")[0].compareTo(s2.split("-")[0]);
-  }
 
   @Inject
   public BookScoreReaderImpl(@Named("reviewer_filename") Reader reviewerReaderNew,
@@ -23,13 +20,11 @@ public class BookScoreReaderImpl implements BookScoreReader{
   //This method finds book info from a given reviewer and returns it.
   private String getBookInfoFromReviewer(String reviewerId, String bookId) throws InterruptedException {
       String booksReviewedByReader;
+
       booksReviewedByReader = reviewerReader.find(reviewerId," ",2);
       String[] booksAndGrades = booksReviewedByReader.split(",");
       int place = Arrays.binarySearch(booksAndGrades,bookId, Comparator.comparing(o -> o.split("-")[0]));
-      /*for(String bookAndGrade : booksAndGrades) {
-          if (bookAndGrade.split("-")[0].equals(bookId))
-              return bookAndGrade;
-      }*/
+
       if (place > -1)
           return booksAndGrades[place];
 
@@ -60,19 +55,16 @@ public class BookScoreReaderImpl implements BookScoreReader{
   }
 
   private List<String> getPairFirstList(Reader reader, String key){
-    List<String> pairList = new LinkedList<>();
     String data;
     try {
       data = reader.find(key," ",2);
     } catch (InterruptedException e) {
-      return pairList;
+      return new LinkedList<>();
     }
+    List<String> pairList;
     String[] pairsArray = data.split(",");
     pairList = Arrays.stream(pairsArray).map((s)->s.split("-")[0]).collect(Collectors.toList());
-    /*for(String pair : pairsArray){
-      String[] split = pair.split("-");
-      pairList.add(split[0]);
-    }*/
+
     return pairList;
   }
   @Override
@@ -81,18 +73,18 @@ public class BookScoreReaderImpl implements BookScoreReader{
   }
 
   private Map<String, Integer> getPairMap(Reader reader, String key){
-    Map<String, Integer> pairMap = new HashMap<>();
     String data;
     try {
       data = reader.find(key," ",2);
     } catch (InterruptedException e) {
-      return pairMap;
+      return new HashMap<>();
     }
+    Map<String, Integer> pairMap = new HashMap<>();
     String[] pairArray = data.split(",");
-    for(String pair : pairArray){
-      String[] split = pair.split("-");
-      pairMap.put(split[0],Integer.parseInt(split[1]));
-    }
+    Arrays.stream(pairArray).forEach((s)-> {
+        String[] split = s.split("-");
+        pairMap.put(split[0],Integer.parseInt(split[1]));
+    });
     return pairMap;
   }
   @Override

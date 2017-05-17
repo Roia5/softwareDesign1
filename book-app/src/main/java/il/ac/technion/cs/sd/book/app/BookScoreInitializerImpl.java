@@ -15,14 +15,15 @@ import org.xml.sax.InputSource;
 public class BookScoreInitializerImpl implements BookScoreInitializer {
     private TreeMap<Pair<String,String>,String> bookMap;
     private TreeMap<Pair<String,String>,String> reviewerMap;
-    public static String reviewer_filename = "reviewer_filename";
-    public static String book_filename = "book_filename";
+    public static String reviewer_filename = "reviewer_storage";
+    public static String book_filename = "book_storage";
+
     private Reader bookReader;
     private Reader reviewerReader;
     @Inject
     public BookScoreInitializerImpl(LineStorageFactory lsf) {
-        bookReader = new Reader(lsf, "book_storage");
-        reviewerReader = new Reader(lsf, "reviewer_storage");
+        bookReader = new Reader(lsf, reviewer_filename);
+        reviewerReader = new Reader(lsf, book_filename);
 
     }
     /*@Inject- Maybe redundant? Inject is used when we don't want to be tied up to a single implementation,
