@@ -5,10 +5,14 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookScoreReaderImpl implements BookScoreReader{
   private Reader bookReader;
   private Reader reviewerReader;
+  private static int stringCompare(String s1, String s2) {
+      return s1.split("-")[0].compareTo(s2.split("-")[0]);
+  }
 
   @Inject
   public BookScoreReaderImpl(@Named("reviewer_filename") Reader reviewerReaderNew,
@@ -16,33 +20,43 @@ public class BookScoreReaderImpl implements BookScoreReader{
     bookReader = bookReaderNew;
     reviewerReader = reviewerReaderNew;
   }
+  //This method finds book info from a given reviewer and returns it.
+  private String getBookInfoFromReviewer(String reviewerId, String bookId) throws InterruptedException {
+      String booksReviewedByReader;
+      booksReviewedByReader = reviewerReader.find(reviewerId," ",2);
+      String[] booksAndGrades = booksReviewedByReader.split(",");
+      int place = Arrays.binarySearch(booksAndGrades,bookId, Comparator.comparing(o -> o.split("-")[0]));
+      /*for(String bookAndGrade : booksAndGrades) {
+          if (bookAndGrade.split("-")[0].equals(bookId))
+              return bookAndGrade;
+      }*/
+      if (place > -1)
+          return booksAndGrades[place];
+
+      throw  new InterruptedException();
+  }
   @Override
   public boolean gaveReview(String reviewerId, String bookId) {
-    String BooksReviewedByReader;
+    String bookInfo;
     try {
-      BooksReviewedByReader = reviewerReader.find(reviewerId," ",2);
+      bookInfo = getBookInfoFromReviewer(reviewerId,bookId);
     } catch (InterruptedException e) {
       return false;
     }
-    return BooksReviewedByReader.contains(bookId);
+
+    return bookInfo.split("-")[0].equals(bookId);
   }
 
   @Override
   public OptionalDouble getScore(String reviewerId, String bookId) {
-    String BooksReviewedByReader;
+    String bookInfo;
     try {
-      BooksReviewedByReader = reviewerReader.find(reviewerId," ",2);
+      bookInfo = getBookInfoFromReviewer(reviewerId,bookId);
     } catch (InterruptedException e) {
       return OptionalDouble.empty();
     }
-    String[] booksAndGrades = BooksReviewedByReader.split(",");
-    for(String bookAndGrade : booksAndGrades){
-      String[] split = bookAndGrade.split("-");
-      if(split[0].equals(bookId)){
-        return OptionalDouble.of(Integer.parseInt(split[1]));
-      }
-    }
-    return OptionalDouble.empty();
+
+    return OptionalDouble.of(Integer.parseInt(bookInfo.split("-")[1]));
   }
 
   private List<String> getPairFirstList(Reader reader, String key){
@@ -54,10 +68,11 @@ public class BookScoreReaderImpl implements BookScoreReader{
       return pairList;
     }
     String[] pairsArray = data.split(",");
-    for(String pair : pairsArray){
+    pairList = Arrays.stream(pairsArray).map((s)->s.split("-")[0]).collect(Collectors.toList());
+    /*for(String pair : pairsArray){
       String[] split = pair.split("-");
       pairList.add(split[0]);
-    }
+    }*/
     return pairList;
   }
   @Override

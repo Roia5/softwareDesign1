@@ -18,8 +18,7 @@ import java.util.Scanner;
  * Created by Roey on 14/05/2017.
  */
 public class BookScoreInitializerImplTest {
-    @Test
-    public void setup() throws Exception {
+    private void setup() throws Exception {
         String fileContents =
                 new Scanner(new File(BookScoreInitializerImplTest.class.getResource("small.xml").getFile())).useDelimiter("\\Z").next();
         new BookScoreInitializerImpl().setup(fileContents);
