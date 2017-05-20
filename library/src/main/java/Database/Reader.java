@@ -50,6 +50,14 @@ public class Reader{
         }
         throw new InterruptedException();
     }
+    //get the info if you know the line number
+    public String find(int lineNum, String delimiter, int index) throws InterruptedException {
+        if (lineNum > st.numberOfLines())
+            throw new InterruptedException();
+        String[] keyValue = st.read(lineNum).split(delimiter);
+        return keyValue[index];
+
+    }
 
     public int numberOfLines() throws InterruptedException{
         return st.numberOfLines();

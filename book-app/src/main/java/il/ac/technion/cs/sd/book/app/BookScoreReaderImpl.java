@@ -9,20 +9,30 @@ import java.util.stream.Collectors;
 
 public class BookScoreReaderImpl implements BookScoreReader{
   private Reader bookReader;
+  private Reader bookRecordsReader;
   private Reader reviewerReader;
+  private Reader reviewerRecordsReader;
 
   @Inject
   public BookScoreReaderImpl(@Named("reviewer_filename") Reader reviewerReaderNew,
-                             @Named("book_filename") Reader bookReaderNew) {
+                             @Named("book_filename") Reader bookReaderNew,
+                             @Named("reviewer_data_filename") Reader reviewerRecordsReaderNew,
+                             @Named("book_data_filename") Reader bookRecordsReaderNew) {
     bookReader = bookReaderNew;
+    bookRecordsReader = bookRecordsReaderNew;
     reviewerReader = reviewerReaderNew;
+    reviewerRecordsReader = reviewerRecordsReaderNew;
   }
   //This method finds book info from a given reviewer and returns it.
   private String getBookInfoFromReviewer(String reviewerId, String bookId) throws InterruptedException {
-      String booksReviewedByReader;
+      String booksReviewedByReaderLineNum;
 
-      booksReviewedByReader = reviewerReader.find(reviewerId," ",2);
+      booksReviewedByReaderLineNum = reviewerReader.find(reviewerId," ",1);
+      int lineNum = Integer.valueOf(booksReviewedByReaderLineNum);
+
+      String booksReviewedByReader = reviewerRecordsReader.find(lineNum," ", 1);
       String[] booksAndGrades = booksReviewedByReader.split(",");
+
       int place = Arrays.binarySearch(booksAndGrades,bookId, Comparator.comparing(o -> o.split("-")[0]));
 
       if (place > -1)
@@ -54,10 +64,11 @@ public class BookScoreReaderImpl implements BookScoreReader{
     return OptionalDouble.of(Integer.parseInt(bookInfo.split("-")[1]));
   }
 
-  private List<String> getPairFirstList(Reader reader, String key){
-    String data;
+  private List<String> getPairFirstList(Reader reader,Reader dataReader, String key){
+    String data,dataLine;
     try {
-      data = reader.find(key," ",2);
+      dataLine = reader.find(key," ",1);
+      data = dataReader.find(Integer.valueOf(dataLine), " ", 1);
     } catch (InterruptedException e) {
       return new LinkedList<>();
     }
@@ -69,13 +80,14 @@ public class BookScoreReaderImpl implements BookScoreReader{
   }
   @Override
   public List<String> getReviewedBooks(String reviewerId) {
-      return getPairFirstList(reviewerReader,reviewerId);
+      return getPairFirstList(reviewerReader,reviewerRecordsReader,reviewerId);
   }
 
-  private Map<String, Integer> getPairMap(Reader reader, String key){
-    String data;
+  private Map<String, Integer> getPairMap(Reader reader,Reader dataReader, String key){
+    String data, dataLine;
     try {
-      data = reader.find(key," ",2);
+        dataLine = reader.find(key, " ", 1);
+      data = dataReader.find(Integer.valueOf(dataLine)," ",1);
     } catch (InterruptedException e) {
       return new HashMap<>();
     }
@@ -89,13 +101,14 @@ public class BookScoreReaderImpl implements BookScoreReader{
   }
   @Override
   public Map<String, Integer> getAllReviewsByReviewer(String reviewerId) {
-    return getPairMap(reviewerReader,reviewerId);
+    return getPairMap(reviewerReader,reviewerRecordsReader,reviewerId);
   }
 
-  private OptionalDouble getAverage(Reader reader, String key){
-    String average;
+  private OptionalDouble getAverage(Reader reader,Reader dataReader, String key){
+    String average, averageLine;
     try {
-      average = reader.find(key," ",1);
+      averageLine = reader.find(key, " ", 1);
+      average = dataReader.find(Integer.valueOf(averageLine)," ",0);
     } catch (InterruptedException e) {
       return OptionalDouble.empty();
     }
@@ -103,21 +116,21 @@ public class BookScoreReaderImpl implements BookScoreReader{
   }
   @Override
   public OptionalDouble getScoreAverageForReviewer(String reviewerId) {
-    return getAverage(reviewerReader,reviewerId);
+    return getAverage(reviewerReader,reviewerRecordsReader,reviewerId);
   }
 
   @Override
   public List<String> getReviewers(String bookId) {
-    return getPairFirstList(bookReader,bookId);
+    return getPairFirstList(bookReader,bookRecordsReader,bookId);
   }
 
   @Override
   public Map<String, Integer> getReviewsForBook(String bookId) {
-    return getPairMap(bookReader,bookId);
+    return getPairMap(bookReader,bookRecordsReader,bookId);
   }
 
   @Override
   public OptionalDouble getAverageReviewScoreForBook(String bookId) {
-    return getAverage(bookReader,bookId);
+    return getAverage(bookReader,bookRecordsReader,bookId);
   }
 }
