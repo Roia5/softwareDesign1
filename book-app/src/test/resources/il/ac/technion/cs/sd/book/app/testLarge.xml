@@ -1,0 +1,48 @@
+<Root>
+    <Reviewer Id="123">
+        <Review>
+            <Id>Foobar</Id>
+            <Score>10</Score>
+        </Review>
+        <Review>
+            <Id>Moobar</Id>
+            <Score>3</Score>
+        </Review>
+    </Reviewer>
+    <Reviewer Id="123">
+        <Review>
+            <Id>Foobar</Id>
+            <Score>5</Score>
+        </Review>
+    </Reviewer>
+    <Reviewer Id="1234">
+        <Review>
+            <Id>Foobar</Id>
+            <Score>1</Score>
+        </Review>
+        <Review>
+            <Id>Doobar</Id>
+            <Score>10</Score>
+        </Review>
+        <Review>
+            <Id>Ahalan</Id>
+            <Score>6</Score>
+        </Review>
+    </Reviewer>
+    <Reviewer Id="123">
+        <Review>
+            <Id>Doobar</Id>
+            <Score>5</Score>
+        </Review>
+    </Reviewer>
+    <Reviewer Id="1234">
+        <Review>
+            <Id>Ahalan</Id>
+            <Score>8</Score>
+        </Review>
+        <Review>
+            <Id>Coobar</Id>
+            <Score>4</Score>
+        </Review>
+    </Reviewer>
+</Root>

@@ -1,32 +1,45 @@
 package il.ac.technion.cs.sd.book.app;
 import java.io.StringReader;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-
+import javafx.util.Pair;
 import Database.Reader;
 import com.google.inject.Inject;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
-import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-public class BookScoreInitializerImpl implements BookScoreInitializer{
+public class BookScoreInitializerImpl implements BookScoreInitializer {
     private TreeMap<Pair<String,String>,String> bookMap;
     private TreeMap<Pair<String,String>,String> reviewerMap;
-    public static String reviewer_filename = "reviewer_filename";
-    public static String book_filename = "book_filename";
+    public static String reviewer_filename = "reviewer_storage";
+    public static String book_filename = "book_storage";
+    public static String reviewer_data_filename = "reviewer_data_storage";
+    public static String book_data_filename = "book_data_storage";
+
     private Reader bookReader;
+    private Reader bookRecordsReader;
     private Reader reviewerReader;
-    /*public BookScoreInitializerImpl(Reader userDatabaseLibrary) {
-        reader = userDatabaseLibrary;
-    }*/
+    private Reader reviewerRecordsReader;
     @Inject
+    public BookScoreInitializerImpl(LineStorageFactory lsf) {
+        bookReader = new Reader(lsf, book_filename);
+        reviewerReader = new Reader(lsf, reviewer_filename);
+        bookRecordsReader = new Reader(lsf, book_data_filename);
+        reviewerRecordsReader = new Reader(lsf, reviewer_data_filename);
+
+    }
+    /*@Inject- Maybe redundant? Inject is used when we don't want to be tied up to a single implementation,
+    * but here we use the provided LineStorage*/
     public BookScoreInitializerImpl() {
-        bookReader = new Reader("book_storage");
-        reviewerReader = new Reader("reviewer_storage");
+        bookReader = new Reader(book_filename);
+        reviewerReader = new Reader(reviewer_filename);
+        bookRecordsReader = new Reader(book_data_filename);
+        reviewerRecordsReader = new Reader(reviewer_data_filename);
     }
     /*
     parseXML- uses java DOM to parse the xml file.
@@ -96,7 +109,8 @@ public class BookScoreInitializerImpl implements BookScoreInitializer{
                 currentDataID=entry.getKey().getKey();
             }
             else{
-                DataAndGradeStringBuilder.append(",");
+                if (entry.getKey().getKey().equals(currentDataID))
+                    DataAndGradeStringBuilder.append(",");
             }
             if(entry.getKey().getKey().equals(currentDataID)){
                 countReviews++;
@@ -119,11 +133,39 @@ public class BookScoreInitializerImpl implements BookScoreInitializer{
         lines.add(currentDataID + " " + average.toString() + " " + DataAndGradeStringBuilder.toString());
         return lines;
     }
+
+    private void makeDataFiles(List<String> fileLines, Reader linesReader, Reader dataReader) {
+        Collections.sort(fileLines);
+
+        List<String> idToLineTmp = fileLines.stream().map((s) -> s.split(" ")[0]).collect(Collectors.toList());
+        List<String> data     = fileLines.stream().map((s) -> s.split(" ")[1] + " " + s.split(" ")[2])
+                .collect(Collectors.toList());
+
+
+        List<String> idToLine = new LinkedList<>();
+        //Put the line number
+        for (int i = 0; i < idToLineTmp.size(); ++i) {
+            String st = idToLineTmp.get(i);
+            st += " " + String.valueOf(i);
+            idToLine.add(i, st);
+        }
+
+        linesReader.insertStrings(idToLine);
+        dataReader.insertStrings(data);
+    }
+    //For Testing
+    public List<String> getBookFileLines() {
+        return buildLines(bookMap.entrySet());
+    }
+
+    public List<String> getReviewerFileLines() {
+        return buildLines(reviewerMap.entrySet());
+    }
     public void setup(String xmlData){
         buildBookMap(xmlData);
-        List<String> bookFileLines = buildLines(bookMap.entrySet());        //write books to library
-        bookReader.insertStrings(bookFileLines);
+        List<String> bookFileLines = buildLines(bookMap.entrySet());
+        makeDataFiles(bookFileLines, bookReader, bookRecordsReader); //write books to library
         List<String> reviewerFileLines = buildLines(reviewerMap.entrySet());
-        reviewerReader.insertStrings(reviewerFileLines);        //write reviewers to library
+        makeDataFiles(reviewerFileLines, reviewerReader, reviewerRecordsReader); //write reviewers to library
     }
 }

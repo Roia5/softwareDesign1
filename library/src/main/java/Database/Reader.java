@@ -14,9 +14,10 @@ import java.util.Collection;
 
 public class Reader{
     private LineStorage st = null;
-/*    public Reader(LineStorageFactory st_factory, String filename) {
+    public Reader(LineStorageFactory st_factory, String filename) {
         st = st_factory.open(filename);
     }
+    /*
     public Reader(LineStorage s){
         st = s;
     }*/
@@ -48,6 +49,14 @@ public class Reader{
                 return keyValue[index];
         }
         throw new InterruptedException();
+    }
+    //get the info if you know the line number
+    public String find(int lineNum, String delimiter, int index) throws InterruptedException {
+        if (lineNum > st.numberOfLines())
+            throw new InterruptedException();
+        String[] keyValue = st.read(lineNum).split(delimiter);
+        return keyValue[index];
+
     }
 
     public int numberOfLines() throws InterruptedException{
