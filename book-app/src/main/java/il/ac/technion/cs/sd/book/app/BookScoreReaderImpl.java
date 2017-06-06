@@ -44,6 +44,14 @@ public class BookScoreReaderImpl implements BookScoreReader{
   public boolean gaveReview(String reviewerId, String bookId) {
     String bookInfo;
     try {
+      System.out.print("size 1is " + bookReader.numberOfLines());
+      System.out.print("size 2is " + bookRecordsReader.numberOfLines());
+      System.out.print("size 3is " + reviewerReader.numberOfLines());
+      System.out.print("size 4is " + reviewerRecordsReader.numberOfLines());
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    try {
       bookInfo = getBookInfoFromReviewer(reviewerId,bookId);
     } catch (InterruptedException e) {
       return false;

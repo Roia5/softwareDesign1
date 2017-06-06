@@ -73,20 +73,20 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
     private void buildBookMap(String filename){
         Document doc = parseXML(filename);
         bookMap = new TreeMap<>((o1, o2) -> {
-            Integer value1 = Integer.parseInt(o1.getValue());
-            Integer value2 = Integer.parseInt(o2.getValue());
+            //Integer value1 = Integer.parseInt(o1.getValue());
+            //Integer value2 = Integer.parseInt(o2.getValue());
             if(!o1.getKey().equals(o2.getKey())){
                 return o1.getKey().compareTo(o2.getKey());
             }
             else{
-                return value1-value2;
+                return o1.getValue().compareTo(o2.getValue());
             }
         });
         reviewerMap = new TreeMap<>((o1, o2) -> {
-            Integer key1 = Integer.parseInt(o1.getKey());
-            Integer key2 = Integer.parseInt(o2.getKey());
-            if(!key1.equals(key2)){
-                return key1-key2;
+            //Integer key1 = Integer.parseInt(o1.getKey());
+            //Integer key2 = Integer.parseInt(o2.getKey());
+            if(!o1.getKey().equals(o2.getKey())){
+                return o1.getKey().compareTo(o2.getKey());
             }
             else{
                 return o1.getValue().compareTo(o2.getValue());
@@ -165,6 +165,11 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         buildBookMap(xmlData);
         List<String> bookFileLines = buildLines(bookMap.entrySet());
         makeDataFiles(bookFileLines, bookReader, bookRecordsReader); //write books to library
+        try {
+            System.out.print("size is " + bookRecordsReader.numberOfLines());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         List<String> reviewerFileLines = buildLines(reviewerMap.entrySet());
         makeDataFiles(reviewerFileLines, reviewerReader, reviewerRecordsReader); //write reviewers to library
     }

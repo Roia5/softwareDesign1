@@ -12,12 +12,11 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-
 public class BookScoreReaderTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(30);
     private BookScoreReader setup(boolean forPerformance) throws FileNotFoundException {
-        Injector injector = Guice.createInjector(new BookScoreModule(forPerformance ? new PerformanceTestFactory() :new MockFactory()),
+        Injector injector = Guice.createInjector(new TestBookScoreModule(forPerformance ? new PerformanceTestFactory() :new MockFactory()),
                 forPerformance ? new PerformanceFactoryModule() : new MockFactoryModule());
         injector.getInstance(BookScoreInitializer.class).setup(new Scanner(new File(BookScoreReaderTest.class.
                 getResource("small.xml").getFile())).useDelimiter("\\Z").next());
