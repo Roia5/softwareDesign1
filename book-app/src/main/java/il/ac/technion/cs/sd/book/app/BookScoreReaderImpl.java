@@ -18,8 +18,8 @@ public class BookScoreReaderImpl implements BookScoreReader{
   public BookScoreReaderImpl(LineStorageFactory lsf) {
     bookReader = new Reader(lsf, BookScoreInitializerImpl.book_filename);
     bookRecordsReader = new Reader(lsf, BookScoreInitializerImpl.book_data_filename);
-    reviewerReader =new Reader(lsf, BookScoreInitializerImpl.reviewer_filename);;
-    reviewerRecordsReader = new Reader(lsf, BookScoreInitializerImpl.reviewer_data_filename);;
+    reviewerReader =new Reader(lsf, BookScoreInitializerImpl.reviewer_filename);
+    reviewerRecordsReader = new Reader(lsf, BookScoreInitializerImpl.reviewer_data_filename);
   }
   //This method finds book info from a given reviewer and returns it.
   private String getBookInfoFromReviewer(String reviewerId, String bookId) throws InterruptedException {
@@ -41,14 +41,6 @@ public class BookScoreReaderImpl implements BookScoreReader{
   @Override
   public boolean gaveReview(String reviewerId, String bookId) {
     String bookInfo;
-    try {
-      System.out.print("size 1is " + bookReader.numberOfLines());
-      System.out.print("size 2is " + bookRecordsReader.numberOfLines());
-      System.out.print("size 3is " + reviewerReader.numberOfLines());
-      System.out.print("size 4is " + reviewerRecordsReader.numberOfLines());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
     try {
       bookInfo = getBookInfoFromReviewer(reviewerId,bookId);
     } catch (InterruptedException e) {

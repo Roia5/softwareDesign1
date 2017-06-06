@@ -112,7 +112,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
                 countReviews++;
             }
             else{
-                average = (double)sumGrades / countReviews;
+                average = (double) sumGrades / countReviews;
                 lines.add(currentDataID + " " + average.toString() + " " + DataAndGradeStringBuilder.toString());
                 currentDataID = entry.getKey().getKey();
                 DataAndGradeStringBuilder.setLength(0);
