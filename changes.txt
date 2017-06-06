@@ -1,0 +1,26 @@
+Changes made for appeal (Daniel Lyubin and Roey Ashkenazy):
+1. in library/Reader:
+	1.1: at method insertStrings:
+		 added boolean parameter 'toSort', that determines whether or not to sort the given array.
+
+2. in book-app/BookScoreInitializerImpl:
+	2.1: at method buildBookMap:
+		 Deleted the key Integer conversion to support all strings as id's or keys.
+	2.2: at method buildlines:
+		 changed average from Integer to Double, also added double casting to average computation.
+	2.3: at method makeDataFiles:
+		 changed the calls to insertStrings to match the change in 1.1
+
+3. in book-app/BookScoreReaderImpl:
+	3.1: at constructor BookScoreReaderImpl(@Named(..)..):
+		 switched the parameters to one parameter of type LineStorageFactory, and changed assignment of old parameters to creating instances of Readers to field members.
+
+4. in book-test/BookScoreModule:
+	4.1: removing the big 'if-else' block, after doing the change in 3.1 it's not needed.
+
+Explanations to the changes:
+1: we have no idea how our tests passed without this change, after we did some changes with the id's they failed and we had to change it.
+
+2: it was our misunderstanding of the requirements.
+
+3-4: We assumed LineStorageModule will provide an actual implementation when testing our assignment, so we added a c'tor with LineStorageFactory parameter for our testing, and a c'tor without the parameter that creates an injector with LineStorageModule for the actual tests, thinking it will contain an actual implementation. We made that assumption because of HW0. we did the exact same thing (a parameterless c'tor that holds calling original LineStorageFactory's methods when you do the testing, and a c'tor with a parameter for our testing), and got 100. Clearly, We did a mistake assuming that, so we had to do these changes.
