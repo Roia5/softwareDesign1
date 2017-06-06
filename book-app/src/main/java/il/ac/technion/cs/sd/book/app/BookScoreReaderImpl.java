@@ -3,6 +3,7 @@ package il.ac.technion.cs.sd.book.app;
 import Database.Reader;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,14 +15,11 @@ public class BookScoreReaderImpl implements BookScoreReader{
   private Reader reviewerRecordsReader;
 
   @Inject
-  public BookScoreReaderImpl(@Named("reviewer_filename") Reader reviewerReaderNew,
-                             @Named("book_filename") Reader bookReaderNew,
-                             @Named("reviewer_data_filename") Reader reviewerRecordsReaderNew,
-                             @Named("book_data_filename") Reader bookRecordsReaderNew) {
-    bookReader = bookReaderNew;
-    bookRecordsReader = bookRecordsReaderNew;
-    reviewerReader = reviewerReaderNew;
-    reviewerRecordsReader = reviewerRecordsReaderNew;
+  public BookScoreReaderImpl(LineStorageFactory lsf) {
+    bookReader = new Reader(lsf, BookScoreInitializerImpl.book_filename);
+    bookRecordsReader = new Reader(lsf, BookScoreInitializerImpl.book_data_filename);
+    reviewerReader =new Reader(lsf, BookScoreInitializerImpl.reviewer_filename);;
+    reviewerRecordsReader = new Reader(lsf, BookScoreInitializerImpl.reviewer_data_filename);;
   }
   //This method finds book info from a given reviewer and returns it.
   private String getBookInfoFromReviewer(String reviewerId, String bookId) throws InterruptedException {

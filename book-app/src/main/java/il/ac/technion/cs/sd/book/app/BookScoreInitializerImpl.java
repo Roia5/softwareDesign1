@@ -166,7 +166,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         List<String> bookFileLines = buildLines(bookMap.entrySet());
         makeDataFiles(bookFileLines, bookReader, bookRecordsReader); //write books to library
         try {
-            System.out.print("size is " + bookRecordsReader.numberOfLines());
+                System.out.print("size is " + bookRecordsReader.numberOfLines());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

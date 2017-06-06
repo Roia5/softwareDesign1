@@ -19,7 +19,7 @@ import java.util.Scanner;
 import static org.junit.Assert.assertEquals;
 
 public class ExampleTest {
-  @Rule public Timeout globalTimeout = Timeout.seconds(30);
+  //@Rule public Timeout globalTimeout = Timeout.seconds(30);
 
   private static BookScoreReader setupAndGetReader(String fileName) throws Exception {
     String fileContents =

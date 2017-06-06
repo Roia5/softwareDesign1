@@ -29,7 +29,7 @@ public class Reader{
     public void insertStrings(Collection<String> stringsCollection) {
         String[] stringsArray = new String[stringsCollection.size()];
         stringsCollection.toArray(stringsArray);
-        Arrays.sort(stringsArray);
+        //Arrays.sort(stringsArray);
         for (String curr_str : stringsArray) {
             st.appendLine(curr_str);
         }

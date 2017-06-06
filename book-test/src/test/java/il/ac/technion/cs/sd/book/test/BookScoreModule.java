@@ -23,15 +23,15 @@ class BookScoreModule extends AbstractModule {
   protected void configure() {
     bind(BookScoreInitializer.class).to(BookScoreInitializerImpl.class);
     bind(BookScoreReader.class).to(BookScoreReaderImpl.class);
-    if (lsf == null) {
+    /*if (lsf == null) {
       bind(Reader.class).annotatedWith(Names.named("reviewer_filename"))
-              .toInstance(new Reader(BookScoreInitializerImpl.reviewer_filename));
+              .toInstance(new Reader(s -> null, BookScoreInitializerImpl.reviewer_filename));
       bind(Reader.class).annotatedWith(Names.named("book_filename"))
-              .toInstance(new Reader(BookScoreInitializerImpl.book_filename));
+              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.book_filename));
       bind(Reader.class).annotatedWith(Names.named("reviewer_data_filename"))
-              .toInstance(new Reader(BookScoreInitializerImpl.reviewer_data_filename));
+              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.reviewer_data_filename));
       bind(Reader.class).annotatedWith(Names.named("book_data_filename"))
-              .toInstance(new Reader(BookScoreInitializerImpl.book_data_filename));
+              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.book_data_filename));
     } else {
       bind(Reader.class).annotatedWith(Names.named("reviewer_filename"))
               .toInstance(new Reader(lsf,BookScoreInitializerImpl.reviewer_filename));
@@ -41,6 +41,6 @@ class BookScoreModule extends AbstractModule {
               .toInstance(new Reader(lsf,BookScoreInitializerImpl.reviewer_data_filename));
       bind(Reader.class).annotatedWith(Names.named("book_data_filename"))
               .toInstance(new Reader(lsf,BookScoreInitializerImpl.book_data_filename));
-    }
+    }*/
   }
 }
