@@ -73,8 +73,6 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
     private void buildBookMap(String filename){
         Document doc = parseXML(filename);
         bookMap = new TreeMap<>((o1, o2) -> {
-            //Integer value1 = Integer.parseInt(o1.getValue());
-            //Integer value2 = Integer.parseInt(o2.getValue());
             if(!o1.getKey().equals(o2.getKey())){
                 return o1.getKey().compareTo(o2.getKey());
             }
@@ -83,8 +81,6 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
             }
         });
         reviewerMap = new TreeMap<>((o1, o2) -> {
-            //Integer key1 = Integer.parseInt(o1.getKey());
-            //Integer key2 = Integer.parseInt(o2.getKey());
             if(!o1.getKey().equals(o2.getKey())){
                 return o1.getKey().compareTo(o2.getKey());
             }
@@ -103,7 +99,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         List<String> lines = new ArrayList<>();
         StringBuilder DataAndGradeStringBuilder = new StringBuilder("");
         int countReviews = 0, sumGrades = 0;
-        Integer average;
+        Double average;
         for (Map.Entry<Pair<String,String>, String> entry : entrySet) {
             if(currentDataID==null){
                 currentDataID=entry.getKey().getKey();
@@ -116,7 +112,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
                 countReviews++;
             }
             else{
-                average = sumGrades / countReviews;
+                average = (double)sumGrades / countReviews;
                 lines.add(currentDataID + " " + average.toString() + " " + DataAndGradeStringBuilder.toString());
                 currentDataID = entry.getKey().getKey();
                 DataAndGradeStringBuilder.setLength(0);
@@ -129,7 +125,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
             DataAndGradeStringBuilder.append(entry.getValue());
 
         }
-        average = sumGrades / countReviews;
+        average = (double)sumGrades / countReviews;
         lines.add(currentDataID + " " + average.toString() + " " + DataAndGradeStringBuilder.toString());
         return lines;
     }
@@ -150,8 +146,8 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
             idToLine.add(i, st);
         }
 
-        linesReader.insertStrings(idToLine);
-        dataReader.insertStrings(data);
+        linesReader.insertStrings(idToLine, false);
+        dataReader.insertStrings(data,false);
     }
     //For Testing
     public List<String> getBookFileLines() {
@@ -165,11 +161,6 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         buildBookMap(xmlData);
         List<String> bookFileLines = buildLines(bookMap.entrySet());
         makeDataFiles(bookFileLines, bookReader, bookRecordsReader); //write books to library
-        try {
-                System.out.print("size is " + bookRecordsReader.numberOfLines());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         List<String> reviewerFileLines = buildLines(reviewerMap.entrySet());
         makeDataFiles(reviewerFileLines, reviewerReader, reviewerRecordsReader); //write reviewers to library
     }

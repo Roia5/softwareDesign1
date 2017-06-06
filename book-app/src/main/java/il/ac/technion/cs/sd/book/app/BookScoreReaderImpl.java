@@ -118,7 +118,7 @@ public class BookScoreReaderImpl implements BookScoreReader{
     } catch (InterruptedException e) {
       return OptionalDouble.empty();
     }
-    return OptionalDouble.of(Integer.parseInt(average));
+    return OptionalDouble.of(Double.parseDouble(average));
   }
   @Override
   public OptionalDouble getScoreAverageForReviewer(String reviewerId) {

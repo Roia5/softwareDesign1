@@ -14,33 +14,9 @@ import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 // This module is in the testing project, so that it could easily bind all dependencies from all levels.
 // This module is in the testing project, so that it could easily bind all dependencies from all levels.
 class BookScoreModule extends AbstractModule {
-  private LineStorageFactory lsf = null;
-  BookScoreModule() {}
-  BookScoreModule(LineStorageFactory lsf) {
-    this.lsf = lsf;
-  }
   @Override
   protected void configure() {
     bind(BookScoreInitializer.class).to(BookScoreInitializerImpl.class);
     bind(BookScoreReader.class).to(BookScoreReaderImpl.class);
-    /*if (lsf == null) {
-      bind(Reader.class).annotatedWith(Names.named("reviewer_filename"))
-              .toInstance(new Reader(s -> null, BookScoreInitializerImpl.reviewer_filename));
-      bind(Reader.class).annotatedWith(Names.named("book_filename"))
-              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.book_filename));
-      bind(Reader.class).annotatedWith(Names.named("reviewer_data_filename"))
-              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.reviewer_data_filename));
-      bind(Reader.class).annotatedWith(Names.named("book_data_filename"))
-              .toInstance(new Reader(s -> null,BookScoreInitializerImpl.book_data_filename));
-    } else {
-      bind(Reader.class).annotatedWith(Names.named("reviewer_filename"))
-              .toInstance(new Reader(lsf,BookScoreInitializerImpl.reviewer_filename));
-      bind(Reader.class).annotatedWith(Names.named("book_filename"))
-              .toInstance(new Reader(lsf,BookScoreInitializerImpl.book_filename));
-      bind(Reader.class).annotatedWith(Names.named("reviewer_data_filename"))
-              .toInstance(new Reader(lsf,BookScoreInitializerImpl.reviewer_data_filename));
-      bind(Reader.class).annotatedWith(Names.named("book_data_filename"))
-              .toInstance(new Reader(lsf,BookScoreInitializerImpl.book_data_filename));
-    }*/
   }
 }
